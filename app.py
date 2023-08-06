@@ -4,7 +4,7 @@ import numpy as np
 import joblib
 
 # Load the saved machine learning model
-model = joblib.load('best_model.pkl')
+model = pickle.load('best_model.pkl')
 
 # Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
