@@ -12,6 +12,8 @@ df = pd.read_csv('CAR DETAILS.csv')
 with open('best_model.pkl', 'rb') as file:
     pipeline = pickle.load(file)
 
+best_model = 'best_model.pkl'
+
 # Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
     input_data = pd.DataFrame({
