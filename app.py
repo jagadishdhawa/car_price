@@ -5,7 +5,7 @@ import joblib
 from sklearn import preprocessing
 import pickle
 
-model=pickle.load(open('best_model.pkl','rb'))
+
 
 def preprocess_data(df):
     le_seller = preprocessing.LabelEncoder()
@@ -30,21 +30,23 @@ def preprocess_data(df):
     df["brand"] = le_brand.transform(df["brand"])
 
 
-# Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
-    input_data = pd.DataFrame({
-        'year': [year],
-        'km_driven':[km_driven],
-        'fuel': [fuel],
-        'seller_type': [seller_type],
-        'transmission': [transmission],
-        'brand': [brand],
-        'owner': [owner]
-    })
-    input_data = preprocess_data(input_data)
+    # Create a dictionary with the input features
+    input_data = {
+        "year": [year],
+        "km_driven": [km_driven],
+        "fuel": [fuel],
+        "seller_type": [seller_type],
+        "transmission": [transmission],
+        "brand": [brand],
+        "owner": [owner]
+    }
+    input_df = pd.DataFrame(input_data)
+    input_df = preprocess_data(input_data)
+    model=pickle.load(open('best_model.pkl','rb'))
 
-prediction = model.predict(input_data)
-return prediction
+    prediction = model.predict(input_data)
+    return prediction[0]
 
 
 
