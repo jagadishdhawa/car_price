@@ -5,6 +5,8 @@ import joblib
 from sklearn import preprocessing
 import pickle
 
+model=pickle.load(open('best_model.pkl','rb'))
+
 def preprocess_data(df):
     le_seller = preprocessing.LabelEncoder()
     le_seller.fit(df["seller_type"])
@@ -27,7 +29,6 @@ def preprocess_data(df):
     le_brand.fit(df["brand"])
     df["brand"] = le_brand.transform(df["brand"])
 
-model=pickle.load(open('best_model.pkl','rb'))
 
 # Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
@@ -41,11 +42,11 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'owner': [owner]
     })
 
-input_data = preprocess_data(input_data)
-
 
     prediction = model.predict(input_data)[0]
     return prediction
+
+input_data = preprocess_data(input_data)
 
 # Streamlit UI
 st.title('Car Price Prediction')
