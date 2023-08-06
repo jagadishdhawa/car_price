@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+from sklearn import preprocessing
 
 import pickle
 
@@ -18,6 +19,26 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'brand': [brand],
         'owner': [owner]
     })
+        le_seller = preprocessing.LabelEncoder()
+        le_seller.fit(input_data["seller_type"])
+        input_data["seller_type"] = le_seller.transform(input_data["seller_type"])
+
+        le_trans = preprocessing.LabelEncoder()
+        le_trans.fit(input_data["transmission"])
+        input_data["transmission"] = le_trans.transform(input_data["transmission"])
+
+        le_fuel = preprocessing.LabelEncoder()
+        le_fuel.fit(input_data["fuel"])
+        input_data["fuel"] = le_fuel.transform(input_data["fuel"])
+
+        le_owner = preprocessing.LabelEncoder()
+        le_owner.fit(input_data["owner"])
+        input_data["owner"] = le_owner.transform(input_data["owner"])
+
+
+        le_brand = preprocessing.LabelEncoder()
+        le_brand.fit(input_data["brand"])
+        input_data["brand"] = le_brand.transform(input_data["brand"])
 
     prediction = model.predict(input_data)[0]
     return prediction
