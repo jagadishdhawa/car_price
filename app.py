@@ -44,7 +44,7 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
     input_data = preprocess_data(input_data)
 
 
-    prediction = model.predict(input_data)[0]
+    prediction = model.predict(input_data)
     return prediction
 
 
