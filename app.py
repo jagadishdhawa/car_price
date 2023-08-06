@@ -45,5 +45,4 @@ if st.button('Predict'):
     prediction = predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner)
     st.success(f'Predicted Selling Price: Rs. {prediction:.2f}')
 
-if __name__ == '__main__':
-    main()
+
