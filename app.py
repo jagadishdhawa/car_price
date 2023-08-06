@@ -43,9 +43,9 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
     }
     input_df = pd.DataFrame(input_data)
     input_df = preprocess_data(input_data)
-    model=pickle.load(open('best_model.pkl','rb'))
+    best_model = joblib.load('best_model.pkl')
 
-    prediction = model.predict(input_data)
+    prediction = best_model.predict(input_data)
     return prediction[0]
 
 
