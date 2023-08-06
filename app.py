@@ -18,7 +18,7 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'owner': [owner]
     })
 
-    prediction = model.predict(input_data)[0]
+    prediction = model.predict(input_data)
     return prediction
 
 # Streamlit UI
