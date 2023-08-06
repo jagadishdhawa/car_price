@@ -41,12 +41,13 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'brand': [brand],
         'owner': [owner]
     })
+    input_data = preprocess_data(input_data)
 
 
     prediction = model.predict(input_data)[0]
     return prediction
 
-input_data = preprocess_data(input_data)
+
 
 # Streamlit UI
 st.title('Car Price Prediction')
