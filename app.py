@@ -11,13 +11,13 @@ model=pickle.load(open('best_model.pkl','rb'))
 # Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
     input_data = pd.DataFrame({
-        'year': (year),
-        'km_driven':(km_driven),
-        'fuel': (fuel),
-        'seller_type': (seller_type),
-        'transmission': (transmission),
-        'brand': (brand),
-        'owner': (owner)
+        'year': [year],
+        'km_driven':[km_driven],
+        'fuel': [fuel],
+        'seller_type': [seller_type],
+        'transmission': [transmission],
+        'brand': [brand],
+        'owner': [owner]
     })
     le_seller = preprocessing.LabelEncoder()
     le_seller.fit(input_data["seller_type"])
