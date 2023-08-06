@@ -24,7 +24,7 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'owner': [owner]
     })
 
-    prediction = model.predict(input_data)
+    prediction = pipeline.predict(input_data)
     return prediction
 
 # Streamlit UI
