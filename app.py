@@ -1,57 +1,60 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
 import pickle
 
 
 # Load dataset
 df = pd.read_csv('CAR DETAILS.csv')
 
-# Load the pipeline
 with open('best_model.pkl', 'rb') as file:
     pipeline = pickle.load(file)
 
-best_model = 'best_model.pkl'
-# Predict function
-def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
-    # Create a dictionary with the input features
-    input_data = {
-        "year": year,
-        "km_driven": km_driven,
-        "fuel": fuel,
-        "seller_type": seller_type,
-        "transmission": transmission,
-        "brand": brand,
-        "owner": owner
-    }
+def filter_cars_by_company(selected_company, df):
+    sorted_df = df.sort_values(['company', 'name'], ascending=True)
+    filtered_cars = sorted_df[sorted_df['company'] == selected_company]['name'].unique()
+    return filtered_cars
 
-    # Convert input data to DataFrame and preprocess
-    input_df = pd.DataFrame([input_data])
-    input_df = preprocess_data(input_df)
+# Create the web app
+def main():
+    # Set the title and description
+    st.title('Car Price Prediction')
+    st.write('Enter the details of the car to predict its price.')
+    
+    # Get user inputs
+    company = st.selectbox('Company Name', sorted(df['company'].unique()))
+    name = st.selectbox('Car Name',filter_cars_by_company(company,df))
+    year = st.number_input('Year', min_value=1900, max_value=2023, step=1)
+    km_driven = st.number_input('Kilometers Driven', step=1000)
+    fuel = st.selectbox('Fuel Type', df['fuel'].unique())
+    seller_type = st.selectbox('Seller Type', df['seller_type'].unique())
+    transmission = st.selectbox('Transmission', df['transmission'].unique())
+    owner = st.selectbox('Owner', df['owner'].unique())
 
-    # Make prediction
-    prediction = best_model.predict(input_df)
+    data = pd.DataFrame({'company': [company],
+                         'name': [name],
+                         'year': [year],
+                         'km_driven': [km_driven],
+                         'fuel': [fuel],
+                         'seller_type': [seller_type],
+                         'transmission': [transmission],
+                         'owner': [owner]})
 
-    return prediction
+    if st.button('Predict Price'):
+        # Extract the transformer and regressor from the pipeline
+        transformer, regressor = pipeline
 
+        # Perform one-hot encoding on categorical columns
+        data_encoded = transformer.transform(data).toarray()
 
-# Streamlit UI
-st.title('Car Price Prediction')
-st.write('This app predicts the selling price of a used car.')
+         # Make predictions
+        predictions = regressor.predict(data_encoded)
+        success_message = f'Price of the car is {predictions[0]} INR'
 
-# Input fields
-year = st.number_input('Year', min_value=1990, max_value=2023, step=1)
-km_driven = st.number_input('Kilometers Driven', min_value=0, step=1000)
-fuel = st.selectbox('Fuel', ['Petrol', 'Diesel', 'CNG'])
-seller_type = st.selectbox('Seller Type', ['Individual', 'Dealer', 'Trustmark Dealer'])
-transmission = st.selectbox('Transmission', ['Manual', 'Automatic'])
-brand = st.text_input('Car Brand', '')
-owner = st.selectbox('Owner', ['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner'])
+        # Add color to the success message
+        colored_message =  f'<span style="color: blue; font-size: 24px;font-weight: bold;">{success_message}</span>'
+        st.markdown(colored_message, unsafe_allow_html=True)
 
-# Predict button
-if st.button('Predict'):
-    prediction = predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner)
-    st.success(f'Predicted Selling Price: Rs. {prediction:.2f}')
-
-
+# Run the web app
+if __name__ == '__main__':
+    main()
