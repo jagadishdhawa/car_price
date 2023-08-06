@@ -46,7 +46,7 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
     best_model = joblib.load('best_model.pkl')
 
     prediction = best_model.predict(input_data)
-    return prediction[0]
+    return prediction
 
 
 
