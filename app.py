@@ -3,8 +3,29 @@ import pandas as pd
 import numpy as np
 import joblib
 from sklearn import preprocessing
-
 import pickle
+
+def preprocess_data(df):
+    le_seller = preprocessing.LabelEncoder()
+    le_seller.fit(df["seller_type"])
+    df["seller_type"] = le_seller.transform(df["seller_type"])
+
+    le_trans = preprocessing.LabelEncoder()
+    le_trans.fit(df["transmission"])
+    df["transmission"] = le_trans.transform(df["transmission"])
+
+    le_fuel = preprocessing.LabelEncoder()
+    le_fuel.fit(df["fuel"])
+    df["fuel"] = le_fuel.transform(df["fuel"])
+
+    le_owner = preprocessing.LabelEncoder()
+    le_owner.fit(df["owner"])
+    df["owner"] = le_owner.transform(df["owner"])
+
+
+    le_brand = preprocessing.LabelEncoder()
+    le_brand.fit(df["brand"])
+    df["brand"] = le_brand.transform(df["brand"])
 
 model=pickle.load(open('best_model.pkl','rb'))
 
@@ -19,26 +40,9 @@ def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner
         'brand': [brand],
         'owner': [owner]
     })
-    le_seller = preprocessing.LabelEncoder()
-    le_seller.fit(input_data["seller_type"])
-    input_data["seller_type"] = le_seller.transform(input_data["seller_type"])
 
-    le_trans = preprocessing.LabelEncoder()
-    le_trans.fit(input_data["transmission"])
-    input_data["transmission"] = le_trans.transform(input_data["transmission"])
+input_data = preprocess_data(input_data)
 
-    le_fuel = preprocessing.LabelEncoder()
-    le_fuel.fit(input_data["fuel"])
-    input_data["fuel"] = le_fuel.transform(input_data["fuel"])
-
-    le_owner = preprocessing.LabelEncoder()
-    le_owner.fit(input_data["owner"])
-    input_data["owner"] = le_owner.transform(input_data["owner"])
-
-
-    le_brand = preprocessing.LabelEncoder()
-    le_brand.fit(input_data["brand"])
-    input_data["brand"] = le_brand.transform(input_data["brand"])
 
     prediction = model.predict(input_data)[0]
     return prediction
