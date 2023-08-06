@@ -13,21 +13,28 @@ with open('best_model.pkl', 'rb') as file:
     pipeline = pickle.load(file)
 
 best_model = 'best_model.pkl'
-
-# Function to predict car price
+# Predict function
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
-    input_data = pd.DataFrame({
-        'year': [year],
-        'km_driven': [km_driven],
-        'fuel': [fuel],
-        'seller_type': [seller_type],
-        'transmission': [transmission],
-        'brand': [brand],
-        'owner': [owner]
-    })
+    # Create a dictionary with the input features
+    input_data = {
+        "year": year,
+        "km_driven": km_driven,
+        "fuel": fuel,
+        "seller_type": seller_type,
+        "transmission": transmission,
+        "brand": brand,
+        "owner": owner
+    }
 
-    prediction = best_model.predict(input_data)
+    # Convert input data to DataFrame and preprocess
+    input_df = pd.DataFrame([input_data])
+    input_df = preprocess_data(input_df)
+
+    # Make prediction
+    prediction = best_model.predict(input_df)
+
     return prediction
+
 
 # Streamlit UI
 st.title('Car Price Prediction')
