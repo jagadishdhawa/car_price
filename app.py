@@ -2,9 +2,15 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import pickle
 
-# Load the saved machine learning model
-model = pickle.load('best_model.pkl')
+
+# Load dataset
+df = pd.read_csv('CAR DETAILS.csv')
+
+# Load the pipeline
+with open('best_model.pkl', 'rb') as file:
+    pipeline = pickle.load(file)
 
 # Function to predict car price
 def predict_price(year, km_driven, fuel, seller_type, transmission, brand, owner):
